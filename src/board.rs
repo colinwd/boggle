@@ -25,7 +25,7 @@ const DICE: [Die; 16] = [
 
 #[derive(Debug)]
 pub struct Board {
-    slots: [[Cell; 4]; 4],
+    pub slots: [[Cell; 4]; 4],
 }
 
 impl Board {
@@ -35,17 +35,13 @@ impl Board {
         });
 
         let slots = [
-            [Cell::new(0, 0, rolled[0]), Cell::new(0, 1, rolled[1]), Cell::new(0, 2, rolled[2]), Cell::new(0, 3, rolled[3])],
-            [Cell::new(1, 0, rolled[4]), Cell::new(1, 1, rolled[5]), Cell::new(1, 2, rolled[6]), Cell::new(1, 3, rolled[7])],
-            [Cell::new(2, 0, rolled[8]), Cell::new(2, 1, rolled[9]), Cell::new(2, 2, rolled[10]), Cell::new(2, 3, rolled[11])],
-            [Cell::new(3, 0, rolled[12]), Cell::new(3, 1, rolled[13]), Cell::new(3, 2, rolled[14]), Cell::new(3, 3, rolled[15])],
+            [Cell::new(0, 0, rolled[0]), Cell::new(1, 0, rolled[1]), Cell::new(2, 0, rolled[2]), Cell::new(3, 0, rolled[3])],
+            [Cell::new(0, 1, rolled[4]), Cell::new(1, 1, rolled[5]), Cell::new(2, 1, rolled[6]), Cell::new(3, 1, rolled[7])],
+            [Cell::new(0, 2, rolled[8]), Cell::new(1, 2, rolled[9]), Cell::new(2, 2, rolled[10]), Cell::new(3, 2, rolled[11])],
+            [Cell::new(0, 3, rolled[12]), Cell::new(1, 3, rolled[13]), Cell::new(2, 3, rolled[14]), Cell::new(3, 3, rolled[15])],
         ];
 
         Board { slots }
-    }
-
-    pub fn first(&self) -> &Cell {
-        return &self.slots[0][0]
     }
 
     pub fn neighbors(&self, c: &Cell, previous: &HashSet<&Cell>) -> Vec<&Cell> {
