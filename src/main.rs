@@ -31,8 +31,7 @@ fn main() {
     for row in &board.slots {
         for cell in row {
             let mut previous: HashSet<&Cell> = HashSet::new();
-            previous.insert(cell);
-            traverse(dictionary, &board, cell, &mut previous, String::new());
+            traverse(dictionary, &board, cell, &mut previous, cell.contents.to_string());
         }
     }
 
@@ -42,41 +41,37 @@ fn main() {
     }
 }
 
-fn traverse<'a>(dict: &Fst<Vec<u8>>, board: &'a Board, cell: &'a Cell, previous: &mut HashSet<&'a Cell>, value: String) -> Option<String> {
+fn traverse<'a>(dict: &Fst<Vec<u8>>, board: &'a Board, cell: &'a Cell, previous: &mut HashSet<&'a Cell>, value: String) {
     if NOT_WORDS.lock().unwrap().contains(&value) {
-        return None
+        return
     }
 
-    //println!("Traversing! Cell {}, previous {:?}, value {}", cell, previous, value);
+    match dictionary::prefix_search(dict, &value) {
+        SearchResult::None => {
+            println!("Not a word: {}", &value);
+            NOT_WORDS.lock().unwrap().insert(value);
+            return
+        },
+        SearchResult::Prefix => {
+            println!("Valid prefix: {}", &value);
+        },
+        SearchResult::Word => {
+            let mut set = FOUND_WORDS.lock().unwrap();
+
+            if !set.contains(&value) {
+                println!("Found word! {}", &value);
+                set.insert(value.clone());
+            }
+        }
+    };
 
     let neighbors = board.neighbors(cell, previous);
 
     for neighbor in neighbors {
         let mut value = value.clone();
 
-        let found = match dictionary::prefix_search(dict, value.as_ref()) {
-            SearchResult::None => {
-                NOT_WORDS.lock().unwrap().insert(value);
-                None
-            },
-            SearchResult::Prefix => {
-                previous.insert(&cell);
-                value.push(cell.contents);
-                traverse(dict, board, neighbor, previous, value);
-                None
-            },
-            SearchResult::Word => Some(value)
-        };
-
-        if found.is_some() {
-            let found = found.unwrap();
-            let mut set = FOUND_WORDS.lock().unwrap();
-
-            if !set.contains(&found) {
-                set.insert(found);
-            }
-        }
+        previous.insert(&cell);
+        value.push(neighbor.contents);
+        traverse(dict, board, neighbor, previous, value);
     }
-
-    None
 }

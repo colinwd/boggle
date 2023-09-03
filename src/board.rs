@@ -45,7 +45,7 @@ impl Board {
     }
 
     pub fn neighbors(&self, c: &Cell, previous: &HashSet<&Cell>) -> Vec<&Cell> {
-        let neighbors = dbg!(vec![
+        let neighbors = vec![
             self.east(c),
             self.southeast(c),
             self.south(c),
@@ -54,7 +54,7 @@ impl Board {
             self.northwest(c),
             self.north(c),
             self.northeast(c)
-        ]);
+        ];
 
         neighbors
             .iter()
