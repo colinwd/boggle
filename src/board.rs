@@ -44,7 +44,7 @@ impl Board {
         Board { slots }
     }
 
-    pub fn neighbors(&self, c: &Cell, previous: &HashSet<&Cell>) -> Vec<&Cell> {
+    pub fn neighbors(&self, c: &Cell, previous: &Vec<&Cell>) -> Vec<&Cell> {
         let neighbors = vec![
             self.east(c),
             self.southeast(c),
@@ -59,7 +59,7 @@ impl Board {
         neighbors
             .iter()
             .filter_map(|opt| *opt)
-            .filter(|cell| !previous.contains(*cell))
+            .filter(|cell| !previous.contains(cell))
             .collect()
     }
 
