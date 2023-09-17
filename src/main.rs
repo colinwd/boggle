@@ -9,15 +9,12 @@ use std::{collections::HashSet, sync::Mutex};
 use board::Board;
 use dictionary::SearchResult;
 use fst::raw::Fst;
+use std::io::Write;
 
 use crate::board::Cell;
 
 lazy_static! {
     static ref FOUND_WORDS: Mutex<HashSet<String>> = {
-        Mutex::new(HashSet::new())
-    };
-
-    static ref NOT_WORDS: Mutex<HashSet<String>> = {
         Mutex::new(HashSet::new())
     };
 }
@@ -38,8 +35,11 @@ fn main() {
     let mut answers: Vec<String> = FOUND_WORDS.lock().unwrap().clone().into_iter().collect();
     answers.sort();
 
+    let stdout = std::io::stdout();
+    let mut lock = stdout.lock();
+
     for word in answers {
-        println!("{}", word);
+        writeln!(lock, "{}", word).unwrap();
     }
 }
 
@@ -50,16 +50,14 @@ fn traverse<'a>(dict: &Fst<Vec<u8>>, board: &'a Board, current_cell: &'a Cell, c
         .map(|c| c.contents)
         .collect::<String>();
 
-    if NOT_WORDS.lock().unwrap().contains(&possible_word) {
-        return
-    }
-
     match dictionary::prefix_search(dict, &possible_word) {
-        SearchResult::None => {
-            NOT_WORDS.lock().unwrap().insert(possible_word);
-            return
-        },
+        // end early, as our current path does not form either a partial or whole word
+        SearchResult::None => return,
+
+        // we could find something...
         SearchResult::Prefix => {},
+        
+        // we found something!
         SearchResult::Word => {
             let mut set = FOUND_WORDS.lock().unwrap();
 

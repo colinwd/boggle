@@ -1,19 +1,8 @@
-use fst::{Set, SetBuilder};
+use fst::Set;
 use fst::raw::Fst;
-use std::fs::File;
-use std::io::{self, BufRead};
 
 pub fn load() -> Fst<Vec<u8>> {
-    let dictionary = File::open("twl06-3-clean.txt").expect("Unable to read dictionary");
-    let dictionary = io::BufReader::new(dictionary);
-
-    let mut set = SetBuilder::memory();
-
-    for line in dictionary.lines() {
-        set.insert(line.unwrap().to_ascii_uppercase()).expect("Dictionary file must be sorted");
-    }
-
-    Set::new(set.into_inner().unwrap()).unwrap().into_fst()
+    Set::new(std::fs::read("dict.fst").unwrap()).unwrap().into_fst()
 }
 
 pub fn prefix_search(fst: &Fst<Vec<u8>>, key: &str) -> SearchResult {

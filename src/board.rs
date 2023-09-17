@@ -1,4 +1,4 @@
-use std::{fmt::Display, fmt::Debug, collections::HashSet};
+use std::{fmt::Display, fmt::Debug};
 
 use rand::seq::SliceRandom;
 
@@ -19,7 +19,7 @@ const DICE: [Die; 16] = [
     ['E', 'H', 'R', 'T', 'V', 'W'],
     ['E', 'I', 'O', 'S', 'S', 'T'],
     ['E', 'L', 'R', 'T', 'T', 'Y'],
-    ['H', 'I', 'M', 'N', 'U', 'Q'],
+    ['H', 'I', 'M', 'N', 'U', 'Q'], //TODO: Q -> Qu
     ['H', 'L', 'N', 'N', 'R', 'Z'],
 ];
 
