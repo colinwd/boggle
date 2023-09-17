@@ -19,7 +19,7 @@ const DICE: [Die; 16] = [
     ['E', 'H', 'R', 'T', 'V', 'W'],
     ['E', 'I', 'O', 'S', 'S', 'T'],
     ['E', 'L', 'R', 'T', 'T', 'Y'],
-    ['H', 'I', 'M', 'N', 'U', 'Q'], //TODO: Q -> Qu
+    ['H', 'I', 'M', 'N', 'U', 'Q'],
     ['H', 'L', 'N', 'N', 'R', 'Z'],
 ];
 
@@ -150,12 +150,20 @@ impl Display for Board {
 pub struct Cell {
     pub x: usize,
     pub y: usize,
-    pub contents: char,
+    contents: char,
 }
 
 impl Cell {
     pub fn new(x: usize, y: usize, c: char) -> Cell {
         Cell { x, y, contents: c }
+    }
+
+    pub fn contents(&self) -> String {
+        if self.contents == 'Q' {
+            "QU".to_string()
+        } else {
+            self.contents.to_string()
+        }
     }
 }
 

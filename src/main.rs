@@ -47,7 +47,7 @@ fn main() {
 fn traverse<'a>(dict: &Fst<Vec<u8>>, board: &'a Board, current_cell: &'a Cell, current_path: Vec<&'a Cell>) {
     let possible_word = current_path
         .iter()
-        .map(|c| c.contents)
+        .map(|c| c.contents())
         .collect::<String>();
 
     match dictionary::prefix_search(dict, &possible_word) {
